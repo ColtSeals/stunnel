@@ -19,9 +19,14 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# 2. DETECCAO DE IP
-echo -e "${YELLOW}[*] Detectando IP Publico...${NC}"
-PUBLIC_IP=$(curl -s ifconfig.me || curl -s icanhazip.com)
+# 2. DETECCAO DE IP (FORCANDO IPV4)
+echo -e "${YELLOW}[*] Detectando IP Publico (IPv4)...${NC}"
+PUBLIC_IP=$(curl -s -4 ifconfig.me || curl -s -4 icanhazip.com)
+
+if [[ -z "$PUBLIC_IP" ]]; then
+    echo -e "${RED}[ERRO] Nao foi possivel detectar o IPv4. Verifique sua conexao.${NC}"
+    exit 1
+fi
 echo -e "${GREEN}    -> IP Encontrado: $PUBLIC_IP${NC}"
 echo ""
 
@@ -73,7 +78,6 @@ systemctl stop sslh
 systemctl start sslh
 
 # 7. CONFIGURACAO DO SSHD (GATEWAY PORTS)
-# Isso permite que, quando o túnel subir, você consiga acessar a porta reversa de fora (opcional, mas util)
 echo -e "${YELLOW}[*] Ajustando SSHD para permitir tunelamento reverso externo...${NC}"
 if ! grep -q "GatewayPorts yes" /etc/ssh/sshd_config; then
     echo "GatewayPorts yes" >> /etc/ssh/sshd_config
