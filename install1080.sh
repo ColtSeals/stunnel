@@ -31,7 +31,7 @@ echo -e "${GREEN}    -> IP Encontrado: $PUBLIC_IP${NC}"
 PORT_EXTERNA=443
 PORT_SSH_LOCAL=22
 PORT_HTTP_DISFARCE=8080
-PORT_REVERSA_INTRANET=1083 # Porta no servidor para acessar a intranet
+PORT_REVERSA_INTRANET=1080 # Porta no servidor para acessar a intranet
 
 # 4. INSTALAÇÃO E MODULOS DO APACHE
 echo -e "${YELLOW}[*] Instalando dependencias e configurando Proxy...${NC}"
@@ -46,11 +46,11 @@ echo "Listen 127.0.0.1:$PORT_HTTP_DISFARCE" > /etc/apache2/ports.conf
 cat > /etc/apache2/sites-available/000-default.conf <<EOF
 <VirtualHost 127.0.0.1:$PORT_HTTP_DISFARCE>
     ServerName $PUBLIC_IP
-    
+
     ProxyPreserveHost Off
     ProxyPass / https://www.policiamilitar.sp.gov.br/
     ProxyPassReverse / https://www.policiamilitar.sp.gov.br/
-    
+
     # Ajuste de SSL para o proxy funcionar com o site oficial
     SSLProxyEngine on
     SSLProxyVerify none
