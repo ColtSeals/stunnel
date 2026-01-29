@@ -20,6 +20,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # 2. DETECCAO DE IP (FORCANDO IPV4)
+# AQUI ESTA A CORRECAO: A flag -4 obriga a usar o protocolo antigo
 echo -e "${YELLOW}[*] Detectando IP Publico (IPv4)...${NC}"
 PUBLIC_IP=$(curl -s -4 ifconfig.me || curl -s -4 icanhazip.com)
 
